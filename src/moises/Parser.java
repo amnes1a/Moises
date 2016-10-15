@@ -87,6 +87,11 @@ public class Parser {
         return Factor();
     }
 
+    public Node Mod() {
+        MatchAndEat(TokenType.MOD);
+        return Factor();
+    }
+
     public Node Add() {
         MatchAndEat(TokenType.ADD);
         return Term();
@@ -105,7 +110,7 @@ public class Parser {
             MatchAndEat(TokenType.RIGHT_PAREN);
         } else if (IsNumber()) {
             Token token = MatchAndEat(TokenType.NUMBER);
-            result = new NumberNode(new Integer(token.text).intValue());
+            result = new NumberNode(new Double(token.text).doubleValue());
         } else if (IsString()) {
             Token token = MatchAndEat(TokenType.STRING);
             result = new StringNode(new String(token.text));
@@ -254,12 +259,14 @@ public class Parser {
         Node node = SignedFactor();
         while (IsMulOp(CurrentToken().type)) {
             switch (CurrentToken().type) {
-    
                 case MULTIPLY:
                     node = new BinOpNode(TokenType.MULTIPLY, node, Multiply());
                     break;
                 case DIVIDE:
                     node = new BinOpNode(TokenType.DIVIDE, node, Divide());
+                    break;
+                case MOD:
+                    node = new BinOpNode(TokenType.MOD, node, Mod());
                     break;
             }
         }
@@ -423,7 +430,7 @@ public class Parser {
     }
 
     public boolean IsMulOp(TokenType type) {
-        return type == TokenType.MULTIPLY || type == TokenType.DIVIDE;
+        return type == TokenType.MULTIPLY || type == TokenType.DIVIDE || type == TokenType.MOD;
     }
 
     public boolean IsAddOp(TokenType type) {

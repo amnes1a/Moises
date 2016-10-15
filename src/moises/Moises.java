@@ -13,10 +13,12 @@ import java.io.Reader;
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 
-public class Interpreter {
+public class Moises {
 
+    // Change this method to only accept .moi files.
     public static void main(String args[]) {
         boolean debug = false;
+
         if (args.length < 1) {
             Util.Writeln("Usage: Demo <script>");
             return;
@@ -24,7 +26,7 @@ public class Interpreter {
         if (args.length > 1) {
             if (args[1].equals("debug")) debug = true;
         }
-        Interpreter interpreter = new Interpreter();
+        Moises interpreter = new Moises();
         String sourceCode = interpreter.ReadFile(args[0]);
         interpreter.Interpret(sourceCode, debug);
     }
@@ -39,9 +41,10 @@ public class Interpreter {
     }
     
     public void DumpTokens(Parser parser) {
+        System.out.println(":::::::::::::: TOKENS ::::::::::::::");
         for (Token token: parser.getTokens())
-            Util.Writeln("Type: " + token.type + " Text: " + token.text + " ");
-        Util.Writeln();
+            Util.Writeln(token.type + " (" + token.text + ")");
+        System.out.println("::::::::::::::::::::::::::::::::::::\n");
     }
 
     private String ReadFile(String path) {
@@ -57,24 +60,23 @@ public class Interpreter {
             while ((read = reader.read(buffer, 0, buffer.length)) > 0) {
                 builder.append(buffer, 0, read);
             }
-            //Keep the space in the end
             builder.append(" ");
             return builder.toString();
         } catch (FileNotFoundException e) {
             String errMsg = "FILE NOT FOUND. ";
-            String sourceInfo = "Error in Interpreter.java->" +
+            String sourceInfo = "Error in Moises.java->" +
                 "ReadFile(String path) method. ";
             Util.Writeln(sourceInfo + errMsg);
             System.exit(0);
         } catch (IOException e) {
             String errMsg = "Error while reading the script. ";
-            String sourceInfo = "Error in Interpreter.java->" +
+            String sourceInfo = "Error in Moises.java->" +
                 "ReadFile(String path) method. ";
             Util.Writeln(sourceInfo + errMsg);
             System.exit(0);
         } catch (Exception e) {
             String errMsg = "Error while reading the script. ";
-            String sourceInfo = "Error in Interpreter.java->" +
+            String sourceInfo = "Error in Moises.java->" +
                 "ReadFile(String path) method. ";
             Util.Writeln(sourceInfo + errMsg + e);
             System.exit(0);
@@ -84,7 +86,7 @@ public class Interpreter {
                 stream.close();
             } catch (Exception e) {
                 String errMsg = "Error while closing a stream or a stream reader. ";
-                String sourceInfo = "Error in Interpreter.java->" +
+                String sourceInfo = "Error in Moises.java->" +
                     "ReadFile(String path) method. ";
                 Util.Writeln(sourceInfo + errMsg + e);
                 System.exit(0);

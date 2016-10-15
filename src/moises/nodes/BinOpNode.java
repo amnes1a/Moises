@@ -12,11 +12,11 @@ public class BinOpNode extends Node {
         this.left = left;
         this.right = right;
     }
-    public int ToInt(Node node) {
+    public double toDouble(Node node) {
         Object res = node.eval();
-        return ((Integer) res).intValue();
+        return ((Double) res).doubleValue();
     }
-    public boolean ToBoolean(Node node) {
+    public boolean toBoolean(Node node) {
         Object res = node.eval();
         return ((Boolean) res).booleanValue();
     }
@@ -27,26 +27,29 @@ public class BinOpNode extends Node {
         Object result = null;
         switch (op) {
             case ADD:
-                result = new Integer(ToInt(left) + ToInt(right));
+                result = new Double(toDouble(left) + toDouble(right));
                 break;
             case SUBTRACT:
-                result = new Integer(ToInt(left) - ToInt(right));
+                result = new Double(toDouble(left) - toDouble(right));
                 break;
             case MULTIPLY:
-                result = new Integer(ToInt(left) * ToInt(right));
+                result = new Double(toDouble(left) * toDouble(right));
                 break;
             case DIVIDE:
-                if (ToInt(right) == 0) {
+                if (toDouble(right) == 0) {
                     System.out.println("Error: Division by Zero!");
                     System.exit(0);
                 }
-                result = new Integer(ToInt(left) / ToInt(right));
+                result = new Double(toDouble(left) / toDouble(right));
+                break;
+            case MOD:
+                result = new Double(toDouble(left) % toDouble(right));
                 break;
             case LESS:
-                result = new Boolean(ToInt(left) < ToInt(right));
+                result = new Boolean(toDouble(left) < toDouble(right));
                 break;
             case GREATER:
-                result = new Boolean(ToInt(left) > ToInt(right));
+                result = new Boolean(toDouble(left) > toDouble(right));
                 break;
                 // != and == work as equal and !equal for strings
             case EQUAL:
@@ -56,16 +59,16 @@ public class BinOpNode extends Node {
                 result = new Boolean(!ToObject(left).equals(ToObject(right)));
                 break;
             case LESSEQUAL:
-                result = new Boolean(ToInt(left) <= ToInt(right));
+                result = new Boolean(toDouble(left) <= toDouble(right));
                 break;
             case GREATEREQUAL:
-                result = new Boolean(ToInt(left) >= ToInt(right));
+                result = new Boolean(toDouble(left) >= toDouble(right));
                 break;
             case OR:
-                result = new Boolean(ToBoolean(left) || ToBoolean(right));
+                result = new Boolean(toBoolean(left) || toBoolean(right));
                 break;
             case AND:
-                result = new Boolean(ToBoolean(left) && ToBoolean(right));
+                result = new Boolean(toBoolean(left) && toBoolean(right));
                 break;
         }
         return result;

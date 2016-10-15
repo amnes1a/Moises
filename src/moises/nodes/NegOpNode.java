@@ -10,13 +10,13 @@ public class NegOpNode extends Node {
         this.node = node;
     }
 
-    public int ToInt(Node node) {
+    public double toDouble(Node node) {
         Object res = node.eval();
-        return ((Integer) res).intValue();
+        return ((Double) res).doubleValue();
     }
     
     public Object eval() {
-        Object result = new Integer(-ToInt(node));
+        Object result = new Double(-toDouble(node));
         return result;
     }
 }

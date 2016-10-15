@@ -12,7 +12,7 @@ public class EulerNode extends Node {
     }
 
     public Object eval() {
-        Object result = new Integer("28763");
+        Object result = new Double("2.71828182845904523536");
         return result;
     }
 }

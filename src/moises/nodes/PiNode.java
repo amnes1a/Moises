@@ -12,7 +12,7 @@ public class PiNode extends Node {
     }
 
     public Object eval() {
-        Object result = new Integer("31516");
+        Object result = new Double("3.141592653589793238");
         return result;
     }
 }

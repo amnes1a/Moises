@@ -5,15 +5,15 @@ import java.util.ArrayList;
 
 public class Tokenizer {
 
-    public boolean IsOp(char chr) {
-        boolean addOp = chr == '+' || chr == '-';
-        boolean mulOp = chr == '*' || chr == '/';
-        boolean compOp = chr == '<' || chr == '>' || chr == '=';
-        boolean lgicOp = chr == '!' || chr == '|' || chr == '&';
+    public boolean isAnOperator(char chr) {
+        boolean addOp = (chr == '+' || chr == '-');
+        boolean compOp = (chr == '<' || chr == '>' || chr == '=');
+        boolean lgicOp = (chr == '!' || chr == '|' || chr == '&');
+        boolean mulOp = (chr == '*' || chr == '/' || chr == '%');
         return addOp || mulOp || compOp || lgicOp;
     }
 
-    public TokenType FindOpType(char firstOperator, char nextChar) {
+    public TokenType findOperatorType(char firstOperator, char nextChar) {
         TokenType type = TokenType.UNKNOWN;
         switch (firstOperator) {
             case '+':
@@ -28,21 +28,28 @@ public class Tokenizer {
             case '/':
                 type = TokenType.DIVIDE;
                 break;
+            case '%':
+                type = TokenType.MOD;
+                break;
             case '<':
                 type = TokenType.LESS;
-                if (nextChar == '=') type = TokenType.LESSEQUAL;
+                if (nextChar == '=')
+                    type = TokenType.LESSEQUAL;
                 break;
             case '>':
                 type = TokenType.GREATER;
-                if (nextChar == '=') type = TokenType.GREATEREQUAL;
+                if (nextChar == '=')
+                    type = TokenType.GREATEREQUAL;
                 break;
             case '=':
                 type = TokenType.ASSIGNMENT;
-                if (nextChar == '=') type = TokenType.EQUAL;
+                if (nextChar == '=')
+                    type = TokenType.EQUAL;
                 break;
             case '!':
                 type = TokenType.NOT;
-                if (nextChar == '=') type = TokenType.NOTEQUAL;
+                if (nextChar == '=')
+                    type = TokenType.NOTEQUAL;
                 break;
             case '|':
                 type = TokenType.OR;
@@ -54,10 +61,10 @@ public class Tokenizer {
         return type;
     }
 
-    public boolean IsParen(char chr) {
-        boolean prntOp = chr == '(' || chr == ')';
-        boolean brktOp = chr == '[' || chr == ']';
-        boolean puncOp = chr == ',';
+    public boolean isParen(char chr) {
+        boolean prntOp = (chr == '(' || chr == ')');
+        boolean brktOp = (chr == '[' || chr == ']');
+        boolean puncOp = (chr == ',');
         return prntOp || brktOp || puncOp;
     }
 
@@ -100,7 +107,7 @@ public class Tokenizer {
 
 
     public List < Token > Tokenize(String source) {
-        List < Token > tokens = new ArrayList < Token > ();
+        List < Token > tokens = new ArrayList<>();
         Token token = null;
         String tokenText = "";
         char firstOperator = '\0';
@@ -111,12 +118,12 @@ public class Tokenizer {
 
             switch (state) {
                 case DEFAULT:
-                    if (IsOp(chr)) {
+                    if (isAnOperator(chr)) {
                         firstOperator = chr;
-                        TokenType opType = FindOpType(firstOperator, '\0');
+                        TokenType opType = findOperatorType(firstOperator, '\0');
                         token = new Token(Character.toString(chr), opType);
                         state = TokenizeState.OPERATOR;
-                    } else if (IsParen(chr)) {
+                    } else if (isParen(chr)) {
                         TokenType parenType = FindParenType(chr);
                         tokens.add(new Token(Character.toString(chr), parenType)); 
                     } else if (Character.isDigit(chr)){
@@ -137,7 +144,7 @@ public class Tokenizer {
                     break;
 
                 case NUMBER:
-                    if (Character.isDigit(chr)) {
+                    if (Character.isDigit(chr) || chr == '.') {
                         tokenText += chr;
                     } else {
                         tokens.add(new Token(tokenText, TokenType.NUMBER));
@@ -146,6 +153,7 @@ public class Tokenizer {
                         i--;
                     }
                     break;
+
 
                 case KEYWORD:
                     if (Character.isLetterOrDigit(chr)) {
@@ -162,8 +170,8 @@ public class Tokenizer {
                     break;   
 
                 case OPERATOR:
-                    if (IsOp(chr)) {
-                        TokenType opType = FindOpType(firstOperator, chr);
+                    if (isAnOperator(chr)) {
+                        TokenType opType = findOperatorType(firstOperator, chr);
                         token = new Token(Character.toString(firstOperator) + Character.toString(chr), opType);
                     } else {
                         tokens.add(token);
@@ -207,7 +215,7 @@ public class Tokenizer {
             case "else":
                 type = TokenType.ELSE;
             break;
-            case "def":
+            case "func":
                 type = TokenType.DEF;
             break;
         }
@@ -215,7 +223,7 @@ public class Tokenizer {
     }
 
     public TokenType FindConstantType(String str){
-        TokenType type = TokenType.UNKNOWN;
+        TokenType type;
         switch (str){
             case "PI":
                 type = TokenType.PI;

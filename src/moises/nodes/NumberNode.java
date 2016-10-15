@@ -3,9 +3,9 @@ package moises.nodes;
 import moises.nodes.Node;
 
 public class NumberNode extends Node {
-    Integer value;
+    Double value;
     public NumberNode() {}
-    public NumberNode(Integer value) {
+    public NumberNode(Double value) {
         this.value = value;
     }
     public Object eval() {

@@ -9,10 +9,6 @@ public class Token {
         this.type = type;
     }
 
-    public String toString() {
-        return "Text: " + text + " Type: " + type;
-    }
-
     public TokenType getType(){
     	return type;
     }
