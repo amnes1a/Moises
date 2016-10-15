@@ -1,8 +1,11 @@
 package moises.util;
 
-import moises.Parameter;
-import moises.Parser;
-import moises.nodes.*;
+import moises.core.Parameter;
+import moises.core.Parser;
+import moises.node.*;
+import moises.node.command.*;
+import moises.node.controlstatement.AssignmentNode;
+import moises.node.function.Function;
 import moises.tokenizer.Token;
 import moises.tokenizer.TokenType;
 
@@ -21,6 +24,7 @@ public class Util {
         inlineFunctions.add(CreateStrLenFunction(parser));
         inlineFunctions.add(CreateStrConcatFunction(parser));
         inlineFunctions.add(CreateInputFunction(parser));
+        inlineFunctions.add(CreatePowFunction(parser));
         return inlineFunctions; 
     }
 
@@ -43,6 +47,19 @@ public class Util {
         parameters.add(new Parameter("inputMessage"));
         List <Node> statements = new LinkedList <Node> ();
         statements.add(new InputCommand(parser));
+        Node functionBody = new BlockNode(statements);
+        Function function = new Function(functionName, functionBody, parameters);
+        Node functionVariable = new AssignmentNode(functionName, function, parser);
+        return functionVariable;
+    }
+
+    public static Node CreatePowFunction(Parser parser) {
+        String functionName = "pow";
+        List <Parameter> parameters = new ArrayList();
+        parameters.add(new Parameter("base"));
+        parameters.add(new Parameter("exponent"));
+        List <Node> statements = new LinkedList <Node> ();
+        statements.add(new PowCommand(parser));
         Node functionBody = new BlockNode(statements);
         Function function = new Function(functionName, functionBody, parameters);
         Node functionVariable = new AssignmentNode(functionName, function, parser);

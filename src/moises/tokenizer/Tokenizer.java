@@ -117,6 +117,7 @@ public class Tokenizer {
             char chr = source.charAt(i);
 
             switch (state) {
+
                 case DEFAULT:
                     if (isAnOperator(chr)) {
                         firstOperator = chr;
@@ -179,6 +180,7 @@ public class Tokenizer {
                         i--;
                     }
                     break;
+
                 case STRING:
                     if (chr == '"' ) {
                         tokens.add(new Token(tokenText, TokenType.STRING));
@@ -188,6 +190,7 @@ public class Tokenizer {
                         tokenText += chr;
                     }
                     break;
+
                 case COMMENT:
                     if (chr == '\n')
                         state = TokenizeState.DEFAULT;

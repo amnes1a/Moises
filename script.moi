@@ -1,4 +1,3 @@
 script
-    y = 12%7
-    println(y)
+
 end
