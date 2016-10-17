@@ -3,5 +3,7 @@
 ## Script declaration
 
 ```python
-x = 123
+script
+   println("here goes the code") 
+end
 ```
