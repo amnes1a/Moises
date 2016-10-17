@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 Moises Language
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package moises.core;
 
 import moises.node.Node;
@@ -15,10 +31,19 @@ import java.nio.charset.Charset;
 
 public class Moises {
 
-    // Change this method to only accept .moi files.
+    /**
+     * 
+     * @param args 
+     */
     public static void main(String args[]) {
         boolean debug = false;
-
+        String filename = args[0];
+        String extension = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
+        
+        if(!extension.equals("moi")){
+            Util.Writeln("Please use a valid Moises file with extension .moi");
+            return;
+        }
         if (args.length < 1) {
             Util.Writeln("Usage: Demo <script>");
             return;
@@ -31,6 +56,11 @@ public class Moises {
         interpreter.Interpret(sourceCode, debug);
     }
 
+    /**
+     * Code Interpreter of the Moises file.
+     * @param source
+     * @param debug 
+     */
     public void Interpret(String source, boolean debug) {
         Tokenizer tokenizer = new Tokenizer();
         Parser parser = new Parser(tokenizer.Tokenize(source));
@@ -40,6 +70,10 @@ public class Moises {
         program.eval();
     }
     
+    /**
+     * This method is to show up the tokens.
+     * @param parser 
+     */
     public void DumpTokens(Parser parser) {
         System.out.println(":::::::::::::: TOKENS ::::::::::::::");
         for (Token token: parser.getTokens())
@@ -47,6 +81,11 @@ public class Moises {
         System.out.println("::::::::::::::::::::::::::::::::::::\n");
     }
 
+    /**
+     * File reader for user input.
+     * @param path
+     * @return 
+     */
     private String ReadFile(String path) {
         FileInputStream stream = null;
         InputStreamReader input = null;
