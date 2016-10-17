@@ -2,5 +2,6 @@
 
 ## Script declaration
 
-'script'
-C
+```python
+x = 123
+```
