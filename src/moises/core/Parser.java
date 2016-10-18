@@ -94,6 +94,12 @@ public class Parser {
         return Factor();
     }
 
+    public Node PowEat() {
+        MatchAndEat(TokenType.POW);
+        return Factor();
+    }
+
+
     public Node Divide() {
         MatchAndEat(TokenType.DIVIDE);
         return Factor();
@@ -268,7 +274,7 @@ public class Parser {
 
 
     public Node Term() {
-        Node node = SignedFactor();
+        Node node = Pow();
         while (IsMulOp(CurrentToken().type)) {
             switch (CurrentToken().type) {
                 case MULTIPLY:
@@ -283,7 +289,18 @@ public class Parser {
             }
         }
         return node;
-    }    
+    }
+
+
+    public Node Pow(){
+        Node node = SignedFactor();
+        if(CurrentToken().type == TokenType.POW){
+            node = new BinOpNode(TokenType.POW, node, PowEat());
+        }
+        return node;
+    }
+
+
 
     public Node SignedFactor() {
         if (CurrentToken().type == TokenType.SUBTRACT) {

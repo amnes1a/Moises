@@ -23,6 +23,7 @@ public class BinOpNode extends Node {
     public Object ToObject(Node node) {
         return node.eval();
     }
+
     public Object eval() {
         Object result = null;
         switch (op) {
@@ -34,6 +35,9 @@ public class BinOpNode extends Node {
                 break;
             case MULTIPLY:
                 result = new Double(toDouble(left) * toDouble(right));
+                break;
+            case POW:
+                result = new Double(Math.pow(toDouble(left), toDouble(right)));
                 break;
             case DIVIDE:
                 if (toDouble(right) == 0) {

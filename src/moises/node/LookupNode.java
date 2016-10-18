@@ -16,7 +16,7 @@ public class LookupNode extends Node {
     public Object eval() {
         Object
         var = varNode.eval();
-        int index = ((Integer) keyNode.eval()).intValue();
+        int index = ((Double) keyNode.eval()).intValue();
         Object ret = ((List) var).get(index);
         return ret;
     }

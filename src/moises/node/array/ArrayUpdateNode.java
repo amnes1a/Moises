@@ -14,14 +14,14 @@ public class ArrayUpdateNode extends Node {
         this.rightSideExpression = rightSideExpression;
     }
 
-    public int ToInt(Node node) {
+    public int toDouble(Node node) {
         Object res = node.eval();
         return ((Integer) res).intValue();
     }
     
     public Object eval() {
         Object arrayVariable = array.eval();
-        int index = ToInt(indexExpression);
+        int index = toDouble(indexExpression);
         Object newValue = rightSideExpression.eval();
         Object ret = ((List) arrayVariable).set(index, newValue);
         return ret;
