@@ -431,6 +431,18 @@ public class Parser {
         }
         return actualParameters;
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    public Node Pow(){
+        Node node = SignedFactor();
+        if(CurrentToken().type == TokenType.POW){
+            node = new BinOpNode(TokenType.POW, node, PowEat());
+        }
+        return node;
+    }
 
     /**
      * Check for different type of arithmetic signs that can be used as a binary
