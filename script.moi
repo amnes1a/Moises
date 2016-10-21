@@ -1,17 +1,20 @@
 script
 
-  func i(x)
-  while(x<5)
-   x = x+1
-   println(x)
-  end
+    func i(x)
+        while(x<5)
+        x = x+1
+        println(x)
+    end
  end
 
 
  y = 1^2
  i(y)
+ println(  12 ^ 2)
 
  test = 2^3
+
+
  println(test)
 
 
