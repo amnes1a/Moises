@@ -48,7 +48,7 @@ public class Parser {
     /**
      * Current position of the tokenizer.
      */
-    public  int currentTokenPosition = 0; 
+    public  int currentTokenPosition = 0;
     /**
      * List of tokens that where found.
      */
@@ -65,15 +65,15 @@ public class Parser {
 
     /**
      * Constructor with a list of tokens predefined.
-     * @param tokens 
+     * @param tokens
      */
     public Parser(List<Token> tokens) {
         this.tokens = tokens; 
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public List<Token> getTokens() {
         return tokens; 
@@ -113,7 +113,7 @@ public class Parser {
     /**
      * Gets an unconsumed token, indexing forward. get(0) will be the next
      * token to be consumed, get(1) the one after that, etc.
-     * 
+     *
      * @param  offset How far forward in the token stream to look.
      * @return        The yet-to-be-consumed token.
      */
@@ -126,7 +126,7 @@ public class Parser {
 
     /**
      * Return Current Token.
-     * @return 
+     * @return
      */
     public Token CurrentToken() {
         return GetToken(0);
@@ -134,7 +134,7 @@ public class Parser {
 
     /**
      * Return next token in the list.
-     * @return 
+     * @return
      */
     public Token NextToken() {
         return GetToken(1); 
@@ -142,7 +142,7 @@ public class Parser {
 
     /**
      * Consume current token.
-     * @param offset 
+     * @param offset
      */
     public void EatToken(int offset) {
         currentTokenPosition = currentTokenPosition + offset;
@@ -151,7 +151,7 @@ public class Parser {
     /**
      * Check token and consume it.
      * @param type
-     * @return 
+     * @return
      */
     public Token MatchAndEat(TokenType type) {
         Token token = CurrentToken();
@@ -163,17 +163,19 @@ public class Parser {
 
     /**
      * Check and consume token if is a multiply operator.
-     * @return 
+     * @return
      */
     public Node Multiply() {
         MatchAndEat(TokenType.MULTIPLY);
         return Factor();
     }
 
-    /**
-     * Check and consume token if is a divisor operator.
-     * @return 
-     */
+    public Node PowEat() {
+        MatchAndEat(TokenType.POW);
+        return Factor();
+    }
+
+
     public Node Divide() {
         MatchAndEat(TokenType.DIVIDE);
         return Factor();
@@ -181,7 +183,7 @@ public class Parser {
 
     /**
      * Check and consume token if is a mod operator.
-     * @return 
+     * @return
      */
     public Node Mod() {
         MatchAndEat(TokenType.MOD);
@@ -190,7 +192,7 @@ public class Parser {
 
     /**
      * Check and consume token if is a sum operator.
-     * @return 
+     * @return
      */
     public Node Add() {
         MatchAndEat(TokenType.ADD);
@@ -199,7 +201,7 @@ public class Parser {
 
     /**
      * Check and consume token if is a sub operator.
-     * @return 
+     * @return
      */
     public Node Subtract() {
         MatchAndEat(TokenType.SUBTRACT);
@@ -210,7 +212,7 @@ public class Parser {
      * Parses an "atomic" expression. This is the highest level of
      * precedence and contains single literal tokens like 123 and "foo", as
      * well as parenthesized expressions.
-     * 
+     *
      * @return The parsed node.
      */
     public Node Factor() {
@@ -246,8 +248,8 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsFunctionDef() {
         TokenType type = CurrentToken().type;
@@ -255,8 +257,8 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsFunctionCall() {
         TokenType type = CurrentToken().type;
@@ -264,8 +266,8 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsArrayAccess() {
         TokenType type = CurrentToken().type; 
@@ -274,8 +276,8 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsConstant(){
         return CurrentToken().type == TokenType.PI || 
@@ -283,26 +285,26 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsString() {
         return CurrentToken().type == TokenType.STRING; 
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsKeyWord() {
         return CurrentToken().type == TokenType.KEYWORD; 
     }
 
     /**
-     * 
+     *
      * @param name
      * @param value
-     * @return 
+     * @return
      */
     public Object setVariable(String name, Object value) {
         symbolTable.put(name, value);
@@ -310,9 +312,9 @@ public class Parser {
     }
     
     /**
-     * 
+     *
      * @param name
-     * @return 
+     * @return
      */
     public Object getVariable(String name) {
             Object value = (Object) symbolTable.get(name);
@@ -322,7 +324,7 @@ public class Parser {
 
     /**
      * An assignment of an expression to a keyword.
-     * @return 
+     * @return
      */
     public Node Assignment() {
         Node node = null;
@@ -340,7 +342,7 @@ public class Parser {
     /**
      * This will define a function, creating different meta data that the
      * interpreter will use to create the function.
-     * @return 
+     * @return
      */
     public Node FunctionDefinition() {
         MatchAndEat(TokenType.DEF);
@@ -360,7 +362,7 @@ public class Parser {
     /**
      * This will help the parser to define an array.
      * @param name
-     * @return 
+     * @return
      */
     public Node ArrayDefinition(String name) {
         List < Node > elements = new ArrayList < Node > ();
@@ -378,7 +380,7 @@ public class Parser {
 
     /**
      * Defining a variable for the interpreter.
-     * @return 
+     * @return
      */
     public Node Variable() {
         Node node = null;
@@ -400,7 +402,7 @@ public class Parser {
 
     /**
      * Calling the function when the code is run.
-     * @return 
+     * @return
      */
     public Node FunctionCall() {
         String functionName = MatchAndEat(TokenType.KEYWORD).text;
@@ -414,7 +416,7 @@ public class Parser {
 
     /**
      * Calling the function, with its parameters, when the code is run.
-     * @return 
+     * @return
      */
     public List FunctionCallParameters() {
         List <Parameter> actualParameters = null;
@@ -429,6 +431,18 @@ public class Parser {
         }
         return actualParameters;
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    public Node Pow(){
+        Node node = SignedFactor();
+        if(CurrentToken().type == TokenType.POW){
+            node = new BinOpNode(TokenType.POW, node, PowEat());
+        }
+        return node;
+    }
 
     /**
      * Check for different type of arithmetic signs that can be used as a binary
@@ -436,7 +450,7 @@ public class Parser {
      * @return The final binary node.
      */
     public Node Term() {
-        Node node = SignedFactor();
+        Node node = Pow();
         while (IsMulOp(CurrentToken().type)) {
             switch (CurrentToken().type) {
                 case MULTIPLY:
@@ -451,11 +465,11 @@ public class Parser {
             }
         }
         return node;
-    }    
+    }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public Node SignedFactor() {
         if (CurrentToken().type == TokenType.SUBTRACT) {
@@ -468,7 +482,7 @@ public class Parser {
 
     /**
      * Basic arithmetic expressions for the interpreter
-     * @return 
+     * @return
      */
     public Node ArithmeticExpression() {
         Node node = Term();
@@ -487,7 +501,7 @@ public class Parser {
 
     /**
      * Function to update or change an array predefined.
-     * @return 
+     * @return
      */
     public Node ArrayUpdate() {
         String arrayName = MatchAndEat(TokenType.KEYWORD).text;
@@ -503,7 +517,7 @@ public class Parser {
     /**
      * Logic arithmetic operations that will be user by the parser to
      * identify this on the script.
-     * @return 
+     * @return
      */
     public Node Relation() {
         Node node = ArithmeticExpression();
@@ -536,7 +550,7 @@ public class Parser {
     /**
      * Create less logic operator.
      * @param node
-     * @return 
+     * @return
      */
     public Node Less(Node node) {
         MatchAndEat(TokenType.LESS);
@@ -546,7 +560,7 @@ public class Parser {
     /**
      * Create greater logic operator.
      * @param node
-     * @return 
+     * @return
      */
     public Node Greater(Node node) {
         MatchAndEat(TokenType.GREATER);
@@ -556,7 +570,7 @@ public class Parser {
     /**
      * Create equal logic operator.
      * @param node
-     * @return 
+     * @return
      */
     public Node Equal(Node node) {
         MatchAndEat(TokenType.EQUAL);
@@ -566,7 +580,7 @@ public class Parser {
     /**
      * Create not equal logic operator.
      * @param node
-     * @return 
+     * @return
      */
     public Node NotEqual(Node node) {
         MatchAndEat(TokenType.NOTEQUAL);
@@ -576,7 +590,7 @@ public class Parser {
     /**
      * Create less or equal logic operator.
      * @param node
-     * @return 
+     * @return
      */
     public Node LessEqual(Node node) {
         MatchAndEat(TokenType.LESSEQUAL);
@@ -586,7 +600,7 @@ public class Parser {
     /**
      * Create greater or equal logic operator.
      * @param node
-     * @return 
+     * @return
      */
     public Node GreaterEqual(Node node) {
         MatchAndEat(TokenType.GREATEREQUAL);
@@ -595,7 +609,7 @@ public class Parser {
 
     /**
      * Create while control statement and creating its own scope.
-     * @return 
+     * @return
      */
     public Node While() {
         Node condition, body;
@@ -608,7 +622,7 @@ public class Parser {
     /**
      * Create an if-else control statement and creating an scope for this control
      * statement.
-     * @return 
+     * @return
      */
     public Node If() {
         Node condition = null, thenPart = null, elsePart = null;
@@ -626,16 +640,16 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public Node BooleanFactor() {
         return Relation();
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public Node BooleanTerm() {
         Node node = NotFactor();
@@ -647,8 +661,8 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public Node NotFactor() {
         if (CurrentToken().type == TokenType.NOT) {
@@ -660,8 +674,8 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public Node BooleanExpression() {
         Node node = BooleanTerm();
@@ -677,7 +691,7 @@ public class Parser {
     }
 
     /**
-     * 
+     *
      * @return A boolean expression.
      */
     public Node Expression() {
@@ -687,7 +701,7 @@ public class Parser {
     /**
      * Check if is a medium arithmetic operator
      * @param type
-     * @return 
+     * @return
      */
     public boolean IsMulOp(TokenType type) {
         return type == TokenType.MULTIPLY || type == TokenType.DIVIDE || type == TokenType.MOD;
@@ -696,7 +710,7 @@ public class Parser {
     /**
      * Check if is a basic arithmetic operator.
      * @param type
-     * @return 
+     * @return
      */
     public boolean IsAddOp(TokenType type) {
         return type == TokenType.ADD || type == TokenType.SUBTRACT;
@@ -705,7 +719,7 @@ public class Parser {
     /**
      * Check if is a medium logic operator.
      * @param type
-     * @return 
+     * @return
      */
     public boolean IsMultiDigitOp(TokenType type) {
         return type == TokenType.LESSEQUAL || type == TokenType.GREATEREQUAL;
@@ -714,7 +728,7 @@ public class Parser {
     /**
      * Check if is a basic logic operator.
      * @param type
-     * @return 
+     * @return
      */
     public boolean IsRelOp(TokenType type) {
         boolean lgOps = type == TokenType.LESS || type == TokenType.GREATER;
@@ -725,23 +739,23 @@ public class Parser {
     /**
      * Check if is a and-or operator.
      * @param type
-     * @return 
+     * @return
      */
     public boolean IsLogicalOp(TokenType type) {
         return type == TokenType.OR || type == TokenType.AND;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsNumber() {
         return CurrentToken().type == TokenType.NUMBER;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsAssignment() {
         TokenType type = CurrentToken().type; 
@@ -750,16 +764,16 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsWhile() {
         return CurrentToken().type == TokenType.WHILE; 
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean IsIfElse() {
         TokenType type = CurrentToken().type;
@@ -797,10 +811,10 @@ public class Parser {
     }
     
     /**
-     * 
+     *
      * @param function
      * @param boundParameters
-     * @return 
+     * @return
      */
     public Object ExecuteFunction(Function
         function, List boundParameters) {
@@ -819,8 +833,8 @@ public class Parser {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public RootNode Program() {
         MatchAndEat(TokenType.SCRIPT);

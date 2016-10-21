@@ -30,6 +30,7 @@ public enum TokenType {
     MULTIPLY,
     DIVIDE,
     MOD,
+    POW,
     LEFT_PAREN,
     RIGHT_PAREN,
     LESS,

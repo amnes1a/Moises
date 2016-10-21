@@ -93,6 +93,9 @@ public class BinOpNode extends Node {
             case MULTIPLY:
                 result = new Double(toDouble(left) * toDouble(right));
                 break;
+            case POW:
+                result = new Double(Math.pow(toDouble(left), toDouble(right)));
+                break;
             case DIVIDE:
                 if (toDouble(right) == 0) {
                     System.out.println("Error: Division by Zero!");

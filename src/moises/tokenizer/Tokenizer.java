@@ -35,7 +35,8 @@ public class Tokenizer {
         boolean compOp = (chr == '<' || chr == '>' || chr == '=');
         boolean lgicOp = (chr == '!' || chr == '|' || chr == '&');
         boolean mulOp = (chr == '*' || chr == '/' || chr == '%');
-        return addOp || mulOp || compOp || lgicOp;
+        boolean powOp = (chr == '^');
+        return addOp || mulOp || compOp || lgicOp || powOp;
     }
 
     /**
@@ -58,6 +59,9 @@ public class Tokenizer {
                 break;
             case '/':
                 type = TokenType.DIVIDE;
+                break;
+            case '^':
+                type = TokenType.POW;
                 break;
             case '%':
                 type = TokenType.MOD;
